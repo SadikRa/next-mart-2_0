@@ -1,6 +1,5 @@
 "use client";
-
-import Logo from "@/app/assets/svgs/Logo";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,64 +10,61 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { registrationSchema } from "./registerValidation";
-import { registerUser } from "@/services/AuthService";
+import Link from "next/link";
+import Logo from "@/app/assets/svgs/Logo";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginUser, reCaptchaTokenVerification } from "@/services/AuthService";
 import { toast } from "sonner";
+import { loginSchema } from "./loginValidation";
+import { useState } from "react";
 
-const RegisterForm = () => {
+export default function LoginForm() {
   const form = useForm({
-    resolver: zodResolver(registrationSchema),
+    resolver: zodResolver(loginSchema),
   });
+
+  const [reCaptchaStatus, setReCaptchaStatus] = useState(false);
 
   const {
     formState: { isSubmitting },
   } = form;
 
-  const password = form.watch("password");
-  const passwordConfirm = form.watch("passwordConfirm");
-
+  const handleReCaptcha = async (value: string | null) => {
+    try {
+      const res = await reCaptchaTokenVerification(value!);
+      if (res?.success) {
+        setReCaptchaStatus(true);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      const res = await registerUser(data);
+      const res = await loginUser(data);
       if (res?.success) {
         toast.success(res?.message);
       } else {
         toast.error(res?.message);
       }
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
     }
   };
+
   return (
     <div className="border-2 border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
       <div className="flex items-center space-x-4 ">
         <Logo />
         <div>
-          <h1 className="text-xl font-semibold">Register</h1>
-          <p className="font-extralight text-sm text-gray-600">
-            Join us today and start your journey!
-          </p>
+          <h1 className="text-xl font-semibold">Login</h1>
+          <p className="font-extralight text-sm text-gray-600">Welcome back!</p>
         </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="email"
@@ -95,42 +91,30 @@ const RegisterForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="passwordConfirm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input type="password" {...field} value={field.value || ""} />
-                </FormControl>
 
-                {passwordConfirm && password !== passwordConfirm ? (
-                  <FormMessage> Password does not match </FormMessage>
-                ) : (
-                  <FormMessage />
-                )}
-              </FormItem>
-            )}
-          />
+          <div className="flex mt-3 w-full">
+            <ReCAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY}
+              onChange={handleReCaptcha}
+              className="mx-auto"
+            />
+          </div>
 
           <Button
-            disabled={passwordConfirm && password !== passwordConfirm}
+            disabled={reCaptchaStatus ? false : true}
             type="submit"
             className="mt-5 w-full"
           >
-            {isSubmitting ? "Registering...." : "Register"}
+            {isSubmitting ? "Logging...." : "Login"}
           </Button>
         </form>
       </Form>
       <p className="text-sm text-gray-600 text-center my-3">
-        Already have an account ?
-        <Link href="/login" className="text-primary">
-          Login
+        Do not have any account ?
+        <Link href="/register" className="text-primary">
+          Register
         </Link>
       </p>
     </div>
   );
-};
-
-export default RegisterForm;
+}
