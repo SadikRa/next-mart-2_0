@@ -13,21 +13,22 @@ import { Input } from "@/components/ui/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import Logo from "@/app/assets/svgs/Logo";
-// import { useState } from "react";
+import NMImageUploader from "@/components/ui/core/NMImageUploader";
+import { useState } from "react";
 
 export default function CreateShopForm() {
-    // const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-    // const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
 
-    const form = useForm();
 
-    const {
-      formState: { isSubmitting },
-    } = form;
+  const form = useForm();
 
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-     console.log(data);
-    };
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log(data);
+  };
 
   return (
     <div className="border-2 border-gray-300 rounded-xl flex-grow max-w-2xl p-5 my-5">
@@ -199,22 +200,12 @@ export default function CreateShopForm() {
               />
             </div>
 
-            {/* {imagePreview.length > 0 ? (
-              <ImagePreviewer
+            <div className="mt-8">
+              <NMImageUploader
                 setImageFiles={setImageFiles}
-                imagePreview={imagePreview}
-                setImagePreview={setImagePreview}
-                className="mt-8"
+                imageFiles={imageFiles}
               />
-            ) : (
-              <div className="mt-8">
-                <NMImageUploader
-                  setImageFiles={setImageFiles}
-                  setImagePreview={setImagePreview}
-                  label="Upload Logo"
-                />
-              </div>
-            )} */}
+            </div>
           </div>
 
           <Button type="submit" className="mt-5 w-full">
