@@ -1,70 +1,55 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
-import { Input } from "../../input";
-import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-type TImageUploaderProps = {
-  imageFiles: File[] | [];
-  setImageFiles: Dispatch<SetStateAction<[] | File[]>>;
+type TImageUploader = {
+  label?: string;
+  className?: string;
+  setImageFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  setImagePreview: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const NMImageUploader = ({
-  imageFiles,
+  label = "Upload Images",
+  className,
   setImageFiles,
-}: TImageUploaderProps) => {
-
+  setImagePreview,
+}: TImageUploader) => {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) return;
+    const file = event.target.files![0];
 
-    const filesArray = Array.from(event.target.files);
+    setImageFiles((prev) => [...prev, file]);
 
-    setImageFiles((prev) => [...prev, ...filesArray]);
-
-    const newPreviews = filesArray.map((file) => {
+    if (file) {
       const reader = new FileReader();
-      return new Promise<string>((resolve) => {
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(file);
-      });
-    });
 
-    Promise.all(newPreviews).then((results) => {
-      setImagePreview((prev) => [...prev, ...results]);
-    });
+      reader.onloadend = () => {
+        setImagePreview((prev) => [...prev, reader.result as string]);
+      };
 
-    event.target.value = ""; // Reset input field
+      reader.readAsDataURL(file);
+    }
+
+    event.target.value = "";
   };
 
   return (
-    <div>
+    <div className={cn("flex flex-col items-center w-full gap-4", className)}>
       <Input
-        onChange={handleImageChange}
+        id="image-upload"
         type="file"
-        multiple
         accept="image/*"
+        multiple
         className="hidden"
-        id="image-uploader"
+        onChange={handleImageChange}
       />
       <label
-        htmlFor="image-uploader"
+        htmlFor="image-upload"
         className="w-full h-36 md:size-36 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md cursor-pointer text-center text-sm text-gray-500 hover:bg-gray-50 transition"
       >
-        Upload Logo
+        {label}
       </label>
-
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        {imagePreview.map((preview, idx) => (
-          <Image
-            key={idx}
-            src={preview}
-            width={100}
-            height={100}
-            alt={`logo-${idx}`}
-            className="rounded-md shadow-md"
-          />
-        ))}
-      </div>
     </div>
   );
 };

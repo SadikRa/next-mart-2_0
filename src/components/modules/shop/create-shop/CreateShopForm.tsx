@@ -15,11 +15,13 @@ import { Textarea } from "@/components/ui/textarea";
 import Logo from "@/app/assets/svgs/Logo";
 import NMImageUploader from "@/components/ui/core/NMImageUploader";
 import { useState } from "react";
+import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagePreviewer";
+import { createShop } from "@/services/Shop";
+import { toast } from "sonner";
 
 export default function CreateShopForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-
-
+  const [imagePreview, setImagePreview] = useState<string[] | []>([]);
   const form = useForm();
 
   const {
@@ -27,7 +29,29 @@ export default function CreateShopForm() {
   } = form;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data);
+    const servicesOffered = data?.servicesOffered
+      .split(",")
+      .map((service: string) => service.trim())
+      .filter((service: string) => service !== "");
+
+    const modifiedData = {
+      ...data,
+      servicesOffered: servicesOffered,
+      establishedYear: Number(data?.establishedYear),
+    };
+    try {
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(modifiedData));
+      formData.append("logo", imageFiles[0] as File);
+
+      const res = await createShop(formData);
+
+      if (res.success) {
+        toast("shop create done");
+      }
+    } catch (err: any) {
+      console.log(err);
+    }
   };
 
   return (
@@ -201,10 +225,21 @@ export default function CreateShopForm() {
             </div>
 
             <div className="mt-8">
-              <NMImageUploader
-                setImageFiles={setImageFiles}
-                imageFiles={imageFiles}
-              />
+              {imagePreview.length > 0 ? (
+                <ImagePreviewer
+                  setImageFiles={setImageFiles}
+                  imagePreview={imagePreview}
+                  setImagePreview={setImagePreview}
+                />
+              ) : (
+                <div className="">
+                  <NMImageUploader
+                    setImageFiles={setImageFiles}
+                    setImagePreview={setImagePreview}
+                    label="upload logo"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
