@@ -22,6 +22,7 @@ import { toast } from "sonner";
 export default function CreateShopForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+
   const form = useForm();
 
   const {
@@ -39,6 +40,7 @@ export default function CreateShopForm() {
       servicesOffered: servicesOffered,
       establishedYear: Number(data?.establishedYear),
     };
+
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(modifiedData));
@@ -46,11 +48,13 @@ export default function CreateShopForm() {
 
       const res = await createShop(formData);
 
+      console.log(res);
+
       if (res.success) {
-        toast("shop create done");
+        toast.success(res.message);
       }
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -224,23 +228,22 @@ export default function CreateShopForm() {
               />
             </div>
 
-            <div className="mt-8">
-              {imagePreview.length > 0 ? (
-                <ImagePreviewer
+            {imagePreview.length > 0 ? (
+              <ImagePreviewer
+                setImageFiles={setImageFiles}
+                imagePreview={imagePreview}
+                setImagePreview={setImagePreview}
+                className="mt-8"
+              />
+            ) : (
+              <div className="mt-8">
+                <NMImageUploader
                   setImageFiles={setImageFiles}
-                  imagePreview={imagePreview}
                   setImagePreview={setImagePreview}
+                  label="Upload Logo"
                 />
-              ) : (
-                <div className="">
-                  <NMImageUploader
-                    setImageFiles={setImageFiles}
-                    setImagePreview={setImagePreview}
-                    label="upload logo"
-                  />
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           <Button type="submit" className="mt-5 w-full">
