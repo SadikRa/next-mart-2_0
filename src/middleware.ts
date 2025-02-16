@@ -5,7 +5,7 @@ type Role = keyof typeof roleBasePrivateRoute;
 
 const authRoute = ["/login", "/register"];
 const roleBasePrivateRoute = {
-  user: [/^\/user/],
+  user: [/^\/user/, /^\/create-shop/],
   admin: [/^\/admin/],
 };
 
@@ -31,8 +31,16 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.next();
     }
   }
+  return NextResponse.redirect(new URL("/", request.url));
 };
 
 export const config = {
-  matcher: ["/login", "/create-shop"],
+  matcher: [
+    "/login",
+    "/create-shop",
+    "/admin",
+    "/admin/:page",
+    "/user",
+    "/user/:page",
+  ],
 };

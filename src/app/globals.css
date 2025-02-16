@@ -34,14 +34,14 @@ body {
     --chart-3: 120 60% 50%; /* Green for charts */
     --chart-4: 30 100% 50%; /* Orange for charts */
     --chart-5: 280 70% 50%; /* Purple for charts */
-    --sidebar-background: 0 0% 100%; /* White sidebar background */
-    --sidebar-foreground: 240 10% 3.9%; /* Dark gray sidebar text */
-    --sidebar-primary: 346 77% 50%; /* Vibrant red for sidebar primary */
-    --sidebar-primary-foreground: 0 0% 100%; /* White text on sidebar primary */
+    --sidebar-background: 0 0% 98%; /* White sidebar background */
+    --sidebar-foreground: 240 5.3% 26.1%; /* Dark gray sidebar text */
+    --sidebar-primary: 240 5.9% 10%; /* Vibrant red for sidebar primary */
+    --sidebar-primary-foreground: 0 0% 98%; /* White text on sidebar primary */
     --sidebar-accent: 240 4.8% 95.9%; /* Light gray for sidebar accents */
     --sidebar-accent-foreground: 240 5.9% 10%; /* Dark gray text on sidebar accents */
-    --sidebar-border: 240 5.9% 90%; /* Light gray sidebar borders */
-    --sidebar-ring: 346 77% 50%; /* Vibrant red for sidebar focus rings */
+    --sidebar-border: 220 13% 91%; /* Light gray sidebar borders */
+    --sidebar-ring: 217.2 91.2% 59.8%; /* Vibrant red for sidebar focus rings */
   }
 
   .dark {
@@ -70,14 +70,14 @@ body {
     --chart-3: 120 60% 50%; /* Green for charts */
     --chart-4: 30 100% 50%; /* Orange for charts */
     --chart-5: 280 70% 50%; /* Purple for charts */
-    --sidebar-background: 240 10% 3.9%; /* Dark gray sidebar background */
-    --sidebar-foreground: 0 0% 98%; /* Light gray sidebar text */
-    --sidebar-primary: 346 77% 50%; /* Vibrant red for sidebar primary */
+    --sidebar-background: 240 5.9% 10%; /* Dark gray sidebar background */
+    --sidebar-foreground: 240 4.8% 95.9%; /* Light gray sidebar text */
+    --sidebar-primary: 224.3 76.3% 48%; /* Vibrant red for sidebar primary */
     --sidebar-primary-foreground: 0 0% 100%; /* White text on sidebar primary */
     --sidebar-accent: 240 3.7% 15.9%; /* Dark gray for sidebar accents */
-    --sidebar-accent-foreground: 0 0% 98%; /* Light gray text on sidebar accents */
+    --sidebar-accent-foreground: 240 4.8% 95.9%; /* Light gray text on sidebar accents */
     --sidebar-border: 240 3.7% 15.9%; /* Dark gray sidebar borders */
-    --sidebar-ring: 346 77% 50%; /* Vibrant red for sidebar focus rings */
+    --sidebar-ring: 217.2 91.2% 59.8%; /* Vibrant red for sidebar focus rings */
   }
 }
 
