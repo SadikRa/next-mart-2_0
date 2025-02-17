@@ -72,7 +72,9 @@ export default function Navbar() {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  <Link href={"/user/shop/category"}>
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem>My shop</DropdownMenuItem>
                   <DropdownMenuItem
                     className="bg-red-600 cursor-pointer"
