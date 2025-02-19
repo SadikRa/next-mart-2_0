@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/app/assets/svgs/Logo";
 import { Button } from "../ui/button";
 import { Heart, LogOut, ShoppingBag } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +16,7 @@ import { logout } from "@/services/AuthService";
 import { useUser } from "@/context/UserContext";
 import { usePathname, useRouter } from "next/navigation";
 import { protectedRoutes } from "@/contants";
+import Logo from "@/assets/svgs/Logo";
 
 export default function Navbar() {
   const { user, setIsLoading } = useUser();
