@@ -82,6 +82,30 @@ export default function AddProductsForm() {
     appendFeatures({ value: "" });
   };
 
+  const { append: appendSpec, fields: specFields } = useFieldArray({
+    control: form.control,
+    name: "specification",
+  });
+
+  const addSpec = () => {
+    appendSpec({ key: "", value: "" });
+  };
+
+  // console.log(specFields);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [categoriesData, brandsData] = await Promise.all([
+        getAllCategories(),
+        getAllBrands(),
+      ]);
+
+      setCategories(categoriesData?.data);
+      setBrands(brandsData?.data);
+    };
+
+    fetchData();
+  }, []);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const availableColors = data.availableColors.map(
