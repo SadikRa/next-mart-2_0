@@ -18,9 +18,9 @@ const Category = async () => {
         </Link>
       </div>
       <div className="grid grid-cols-6 gap-4">
-        {categories.map((category: ICategory) => (
+        {Array(12).fill(categories?.[0]).map((category: ICategory, idx: number) => (
           <>
-            <CategoryCard key={category._id} category={category} />
+            <CategoryCard key={idx} category={category} />
           </>
         ))}
       </div>
