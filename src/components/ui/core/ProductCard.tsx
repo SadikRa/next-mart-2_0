@@ -101,4 +101,5 @@ const ProductCard = ({ product }: { product: IProduct }) => {
   );
 };
 
+
 export default ProductCard;
