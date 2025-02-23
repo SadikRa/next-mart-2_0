@@ -3,11 +3,14 @@ import ProductBanner from "@/components/modules/products/banner";
 import CategoryCard from "@/components/ui/core/CategoryCard";
 import NMContainer from "@/components/ui/core/NMContainer";
 import { getAllCategories } from "@/services/Category";
+import { getAllProducts } from "@/services/Product";
 import { ICategory } from "@/types";
 import React from "react";
 
 const AllProductPage = async () => {
   const { data: categories } = await getAllCategories();
+
+  const {data: products} = await getAllProducts()
 
   return (
     <NMContainer>
@@ -20,7 +23,7 @@ const AllProductPage = async () => {
             <CategoryCard key={idx} category={category} />
           ))}
       </div>
-      <AllProducts />
+      <AllProducts products={products} />
     </NMContainer>
   );
 };
