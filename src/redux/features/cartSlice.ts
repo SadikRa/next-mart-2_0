@@ -1,5 +1,6 @@
 import { IProduct } from "@/types";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export interface CartProduct extends IProduct {
   orderQuantity: number;
@@ -21,40 +22,45 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addProduct: (state, action: PayloadAction<IProduct>) => {
+    addProduct: (state, action) => {
       const productToAdd = state.products.find(
         (product) => product._id === action.payload._id
       );
 
       if (productToAdd) {
         productToAdd.orderQuantity += 1;
-      } else {
-        state.products.push({ ...action.payload, orderQuantity: 1 });
+        return;
       }
-    },
 
-    removeProduct: (state, action: PayloadAction<string>) => {
-      state.products = state.products.filter(
-        (product) => product._id !== action.payload
+      state.products.push({ ...action.payload, orderQuantity: 1 });
+    },
+    incrementOrderQuantity: (state, action) => {
+      const productToIncrement = state.products.find(
+        (product) => product._id == action.payload
       );
-    },
 
-    updateQuantity: (
-      state,
-      action: PayloadAction<{ id: string; quantity: number }>
-    ) => {
-      const product = state.products.find((p) => p._id === action.payload.id);
-      if (product) {
-        product.orderQuantity = action.payload.quantity;
+      if (productToIncrement) {
+        productToIncrement.orderQuantity += 1;
+        return;
       }
     },
+    decrementOrderQuantity: (state, action) => {
+      const productToDecrement = state.products.find(
+        (product) => product._id == action.payload
+      );
 
-    clearCart: (state) => {
-      state.products = [];
+      if (productToDecrement) {
+        productToDecrement.orderQuantity -= 1;
+        return;
+      }
     },
+    removeProduct: () => {},
   },
 });
 
-export const { addProduct, removeProduct, updateQuantity, clearCart } =
-  cartSlice.actions;
+export const orderedProductsSelector = (state: RootState) => {
+  return state.cart.products;
+};
+
+export const { addProduct, incrementOrderQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

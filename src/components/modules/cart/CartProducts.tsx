@@ -1,11 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import emptyCart from "@/assets/empty-cart.png";
 import CartProductCard from "./CartProductCard";
 import { IProduct } from "@/types";
 import { useAppSelector } from "@/redux/hooks";
-import { addProduct } from "@/redux/features/cartSlice";
+import { orderedProductsSelector } from "@/redux/features/cartSlice";
 export default function CartProducts() {
-  const { products } = useAppSelector(addProduct());
+  const products = useAppSelector(orderedProductsSelector);
 
   return (
     <div className="border-2 border-white bg-background brightness-105 rounded-md col-span-8 h-full row-span-3 p-10 space-y-5">
@@ -21,7 +23,7 @@ export default function CartProducts() {
           </div>
         </div>
       )}
-      {products.map((product: IProduct) => (
+      {products?.map((product: IProduct) => (
         <CartProductCard key={product._id} product={product} />
       ))}
     </div>
