@@ -49,12 +49,16 @@ const cartSlice = createSlice({
         (product) => product._id == action.payload
       );
 
-      if (productToDecrement) {
+      if (productToDecrement && productToDecrement.orderQuantity > 1) {
         productToDecrement.orderQuantity -= 1;
         return;
       }
     },
-    removeProduct: () => {},
+    removeProduct: (state, action) => {
+      state.products = state.products.filter(
+        (product) => product._id !== action.payload
+      );
+    },
   },
 });
 
@@ -62,5 +66,20 @@ export const orderedProductsSelector = (state: RootState) => {
   return state.cart.products;
 };
 
-export const { addProduct, incrementOrderQuantity } = cartSlice.actions;
+export const subTotalSelector = (state: RootState) => {
+  return state.cart.products.reduce((acc, product) => {
+    if (product.offerPrice) {
+      return acc + product.offerPrice * product.orderQuantity;
+    } else {
+      return acc + product.price * product.orderQuantity;
+    }
+  }, 0);
+};
+
+export const {
+  addProduct,
+  incrementOrderQuantity,
+  decrementOrderQuantity,
+  removeProduct,
+} = cartSlice.actions;
 export default cartSlice.reducer;
