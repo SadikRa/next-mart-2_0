@@ -59,13 +59,21 @@ const cartSlice = createSlice({
         (product) => product._id !== action.payload
       );
     },
+    updateCity: (state, action) => {
+      state.city = action.payload;
+    },
+    updateShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload;
+    },
   },
 });
 
+//get product
 export const orderedProductsSelector = (state: RootState) => {
   return state.cart.products;
 };
 
+///payment
 export const subTotalSelector = (state: RootState) => {
   return state.cart.products.reduce((acc, product) => {
     if (product.offerPrice) {
@@ -76,10 +84,19 @@ export const subTotalSelector = (state: RootState) => {
   }, 0);
 };
 
+export const citySelector = (state: RootState) => {
+  return state.cart.city;
+};
+export const shippingAddressSelector = (state: RootState) => {
+  return state.cart.shippingAddress;
+};
+
 export const {
   addProduct,
   incrementOrderQuantity,
   decrementOrderQuantity,
   removeProduct,
+  updateCity,
+  updateShippingAddress,
 } = cartSlice.actions;
 export default cartSlice.reducer;
