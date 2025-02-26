@@ -1,6 +1,5 @@
 "use client";
 
-import Logo from "@/app/assets/svgs/Logo";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,6 +16,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { registrationSchema } from "./registerValidation";
 import { registerUser } from "@/services/AuthService";
 import { toast } from "sonner";
+import Logo from "@/assets/svgs/Logo";
 
 const RegisterForm = () => {
   const form = useForm({
@@ -29,7 +29,6 @@ const RegisterForm = () => {
 
   const password = form.watch("password");
   const passwordConfirm = form.watch("passwordConfirm");
-
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
