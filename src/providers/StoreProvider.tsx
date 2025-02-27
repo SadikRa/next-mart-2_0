@@ -1,4 +1,5 @@
 "use client";
+import Loading from "@/components/ui/loading";
 import { AppStore, makeStore } from "@/redux/store";
 import { useRef } from "react";
 import { Provider } from "react-redux";
@@ -20,14 +21,7 @@ export default function StoreProvider({
 
   return (
     <Provider store={storeRef.current}>
-      <PersistGate
-        loading={
-          <>
-            <p>Loading....</p>
-          </>
-        }
-        persistor={persistedStore}
-      >
+      <PersistGate loading={<Loading />} persistor={persistedStore}>
         {children}
       </PersistGate>
     </Provider>
