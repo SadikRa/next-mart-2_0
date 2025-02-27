@@ -43,9 +43,6 @@ export default function RootLayout({
   );
 }
 
-
-
-
 // @layer base {
 //   :root {
 //     /* Light Theme */
