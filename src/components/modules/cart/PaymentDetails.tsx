@@ -5,6 +5,7 @@ import { useUser } from "@/context/UserContext";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import {
   citySelector,
+  clearCart,
   grandTotalSelector,
   orderedProductsSelector,
   orderSelector,
@@ -12,7 +13,8 @@ import {
   shippingCostSelector,
   subTotalSelector,
 } from "@/redux/features/cartSlice";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { createOrder } from "@/services/cart";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -23,31 +25,46 @@ export default function PaymentDetails() {
   const order = useAppSelector(orderSelector);
   const city = useAppSelector(citySelector);
   const shippingAddress = useAppSelector(shippingAddressSelector);
-  const cartProduct = useAppSelector(orderedProductsSelector);
+  const cartProducts = useAppSelector(orderedProductsSelector);
+
   const user = useUser();
+
   const router = useRouter();
 
-  const handleOrderNow = () => {
-    const orderLoading = toast.loading("Order id being  placed");
+  const dispatch = useAppDispatch();
+
+  const handleOrder = async () => {
+    const orderLoading = toast.loading("Order is being placed");
     try {
       if (!user.user) {
         router.push("/login");
-        throw new Error("please login first");
-      }
-      if (!city) {
-        throw new Error("city is not found");
-      }
-      if (!shippingAddress) {
-        throw new Error("shippingAddress is not found");
-      }
-      if (cartProduct.length == 0) {
-        throw new Error("Cart is empty, what are you trying to order");
+        throw new Error("Please login first.");
       }
 
-      toast.success("order created successfully", { id: orderLoading });
-      console.log(order);
+      if (!city) {
+        throw new Error("City is missing");
+      }
+      if (!shippingAddress) {
+        throw new Error("Shipping address is missing");
+      }
+
+      if (cartProducts.length === 0) {
+        throw new Error("Cart is empty, what are you trying to order ??");
+      }
+
+      const res = await createOrder(order);
+
+      if (res.success) {
+        toast.success(res.message, { id: orderLoading });
+        dispatch(clearCart());
+        router.push(res.data.paymentUrl);
+      }
+
+      if (!res.success) {
+        toast.error(res.message, { id: orderLoading });
+      }
     } catch (error: any) {
-      toast.error(error.massage, { id: orderLoading });
+      toast.error(error.message, { id: orderLoading });
     }
   };
 
@@ -61,7 +78,7 @@ export default function PaymentDetails() {
         </div>
         <div className="flex justify-between">
           <p className="text-gray-500 ">Discount</p>
-          <p className="font-semibold"></p>
+          <p className="font-semibold">{currencyFormatter(0)}</p>
         </div>
         <div className="flex justify-between">
           <p className="text-gray-500 ">Shipment Cost</p>
@@ -73,7 +90,7 @@ export default function PaymentDetails() {
         <p className="font-semibold">{currencyFormatter(grandTotal)}</p>
       </div>
       <Button
-        onClick={handleOrderNow}
+        onClick={handleOrder}
         className="w-full text-xl font-semibold py-5"
       >
         Order Now
